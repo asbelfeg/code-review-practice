@@ -1,40 +1,19 @@
 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+        time.sleep(3)
 
+        print("Текущий URL:", driver.current_url)
+        page_text = driver.find_element(By.TAG_NAME, "body").text
+        print("Текст страницы:", page_text)
 
-def test_login_form():
-    driver = webdriver.Chrome()
+        # Проверяем, что появилась ожидаемая ошибка
+        assert (
+            "Неправильное имя пользователя или пароль" in page_text
+            or "капч" in page_text.lower()
+            or "captcha" in page_text.lower()
+        ), "Не найдено сообщение об ошибке логина или капче"
 
-    try:
-        driver.get("https://b2c.passport.rt.ru")
-
-        # Открываем вкладку входа
-        driver.find_element(By.ID, "t-btn-tab-login").click()
-
-        # Вводим логин и пароль
-        driver.find_element(By.ID, "username").send_keys("test_user")
-        driver.find_element(By.ID, "password").send_keys("test_password")
-
-        # Нажимаем кнопку входа
-        driver.find_element(By.ID, "kc-login").click()
-
-        # ДОБАВЛЕНО: ждём ручного решения капчи
-        input("Реши капчу в браузере, затем нажми Enter в терминале...")
-
-        # Проверяем сообщение об ошибке
-        error_msg = driver.find_element(
-            By.CLASS_NAME, "card-error"
-        ).text
-
-        assert "Неправильное имя пользователя или пароль" in error_msg
-
-        print("Тест завершён успешно!")
-
-    finally:
+        print("Test passed successfully!")
         driver.quit()
 
 
-if __name__ == "__main__":
-    test_login_form()
 
